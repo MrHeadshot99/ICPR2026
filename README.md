@@ -54,28 +54,6 @@ The repository is intended to support reproducibility of the camera-ready ICPR 2
 
 ---
 
-## Important Note on NDVI Filtering
-
-The current training notebook assumes that the dataset has already been cleaned using the NDVI-guided filtering procedure.
-
-Therefore, the notebook directly uses:
-
-```python
-TRAIN_CSV = "train_full_df_clean.csv"
-TEST_CSV  = "test_hold_df_clean.csv"
-```
-
-The NDVI filtering step should **not** be applied again during training.
-
-The cleanup log files are included only for transparency and reproducibility:
-
-```text
-cleanup_log_train_full.csv
-cleanup_log_test_hold.csv
-```
-
----
-
 ## Dataset Format
 
 The cleaned CSV files should contain at least the following columns:
@@ -128,21 +106,6 @@ The main evaluation metrics include:
 ## Environment
 
 The experiments were developed and tested in a Kaggle notebook environment.
-
-Recommended environment:
-
-```text
-Python >= 3.10
-PyTorch
-torchvision
-timm
-numpy
-pandas
-scikit-learn
-matplotlib
-tifffile
-opencv-python
-```
 
 Install required packages if needed:
 
