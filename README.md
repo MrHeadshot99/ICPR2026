@@ -27,18 +27,22 @@ The repository is intended to support reproducibility of the camera-ready ICPR 2
 
 ---
 
+
 ## Repository Structure
 
 ```text
 .
-├── Health/
-│   └── hyperspectral image files for healthy wheat samples
-├── Other/
-│   └── hyperspectral image files for other/background/ambiguous samples
-├── Rust/
-│   └── hyperspectral image files for wheat rust samples
 ├── train_full_df_clean.csv
 ├── test_hold_df_clean.csv
 ├── cleanup_log_train_full.csv
 ├── cleanup_log_test_hold.csv
+├── icpr2026_wheat_rust_proposed_clean_github.ipynb
+├── notebook5c6c78846e (2).ipynb
 └── README.md
+
+### Notebook Descriptions
+
+| File | Description |
+|---|---|
+| `icpr2026_wheat_rust_proposed_clean_github.ipynb` | Cleaned and refined version of the ICPR 2026 experimental code. This is the recommended notebook for reproducing the final pipeline. It includes clearer comments, organized sections, and cleaned explanations for GitHub release. |
+| `notebook5c6c78846e (2).ipynb` | Original early-stage Kaggle notebook code. This version is kept for transparency and records the initial experimental development process. It may contain less organized code, temporary comments, and earlier experiment traces. |
