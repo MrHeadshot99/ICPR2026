@@ -1,6 +1,7 @@
+````markdown
 # Dual-Branch Spectral-Spatial Network for UAV Hyperspectral Wheat Rust Detection
 
-This repository contains the dataset split files, cleanup logs, RRPR reproducibility information, pretrained checkpoints, and Kaggle notebooks used for the ICPR 2026 paper:
+This repository contains the dataset split files, cleanup logs, RRPR reproducibility information, holdout prediction outputs, pretrained checkpoints, and Kaggle notebooks used for the ICPR 2026 paper:
 
 **Dual-Branch Spectral-Spatial Network with Knowledge- and Data-Driven Band Selection for UAV Hyperspectral Wheat Rust Detection**
 
@@ -32,12 +33,14 @@ The repository is intended to support reproducibility of the camera-ready ICPR 2
 
 ```text
 .
-├── train_full_df_clean.csv
-├── test_hold_df_clean.csv
-├── cleanup_log_train_full.csv
-├── cleanup_log_test_hold.csv
-├── notebook5c6c78846e6b4ec2fdc4 (Refined).ipynb
-├── notebook5c6c78846e (2).ipynb
+├── DataCSV/
+│   ├── train_full_df_clean.csv
+│   ├── test_hold_df_clean.csv
+│   ├── cleanup_log_train_full.csv
+│   └── cleanup_log_test_hold.csv
+├── results/
+│   ├── holdout_probs.npy
+│   └── holdout_predictions.csv
 ├── checkpoints/
 │   ├── fold0_best.pth
 │   ├── fold1_best.pth
@@ -49,6 +52,8 @@ The repository is intended to support reproducibility of the camera-ready ICPR 2
 │   ├── required_form_info.json
 │   ├── hardware_info.json
 │   └── library_versions.csv
+├── notebook5c6c78846e6b4ec2fdc4 (Refined).ipynb
+├── notebook5c6c78846e (2).ipynb
 └── README.md
 ```
 
@@ -58,17 +63,19 @@ The repository is intended to support reproducibility of the camera-ready ICPR 2
 
 | File | Description |
 |---|---|
-| `train_full_df_clean.csv` | Fixed NDVI-refined training dataframe used for model training and 5-fold cross-validation. |
-| `test_hold_df_clean.csv` | Fixed NDVI-refined holdout test dataframe used only for final evaluation. |
-| `cleanup_log_train_full.csv` | Log file from the NDVI-guided cleanup process for the training split. It records how the fixed training CSV was derived from the original split. |
-| `cleanup_log_test_hold.csv` | Log file from the NDVI-guided cleanup process for the holdout test split. |
-| `notebook5c6c78846e6b4ec2fdc4 (Refined).ipynb` | Refined reproducibility notebook. This is the recommended notebook for reproducing the final ICPR 2026 pipeline. It uses the fixed NDVI-refined CSV files directly and was re-run on June 9, 2026 MDT to verify that it reproduces the reported result. |
-| `notebook5c6c78846e (2).ipynb` | Original early-stage Kaggle notebook. This notebook was used during the first experimental development stage and generated the NDVI-refined fixed train/test CSV files. It is kept for transparency, but it is not the recommended notebook for final reproduction. |
+| `DataCSV/train_full_df_clean.csv` | Fixed NDVI-refined training dataframe used for model training and 5-fold cross-validation. |
+| `DataCSV/test_hold_df_clean.csv` | Fixed NDVI-refined holdout test dataframe used only for final evaluation. |
+| `DataCSV/cleanup_log_train_full.csv` | Log file from the NDVI-guided cleanup process for the training split. It records how the fixed training CSV was derived from the original split. |
+| `DataCSV/cleanup_log_test_hold.csv` | Log file from the NDVI-guided cleanup process for the holdout test split. |
+| `results/holdout_probs.npy` | Saved softmax probability outputs from the final 5-fold holdout ensemble evaluation. |
+| `results/holdout_predictions.csv` | Saved holdout prediction file containing sample paths, ground-truth labels, and predicted labels from the final ensemble evaluation. |
 | `checkpoints/` | Pretrained fold checkpoints for faster verification of the holdout ensemble evaluation. |
 | `rrpr_info/required_form_info_copy_paste.txt` | Copy-paste summary for the ICPR 2026 RRPR GitHub issue form. |
 | `rrpr_info/required_form_info.json` | Structured JSON version of the RRPR form information. |
 | `rrpr_info/hardware_info.json` | Recorded CPU, RAM, GPU, OS, CUDA, cuDNN, and PyTorch environment information. |
 | `rrpr_info/library_versions.csv` | Key package versions used in the reproducibility environment. |
+| `notebook5c6c78846e6b4ec2fdc4 (Refined).ipynb` | Refined reproducibility notebook. This is the recommended notebook for reproducing the final ICPR 2026 pipeline. It uses the fixed NDVI-refined CSV files directly and was re-run on June 9, 2026 MDT to verify that it reproduces the reported result. |
+| `notebook5c6c78846e (2).ipynb` | Original early-stage Kaggle notebook. This notebook was used during the first experimental development stage and generated the NDVI-refined fixed train/test CSV files. It is kept for transparency, but it is not the recommended notebook for final reproduction. |
 
 ---
 
@@ -100,8 +107,8 @@ LABELS = ["Health", "Other", "Rust"]
 The final reproducibility pipeline uses the provided fixed split files:
 
 ```text
-train_full_df_clean.csv
-test_hold_df_clean.csv
+DataCSV/train_full_df_clean.csv
+DataCSV/test_hold_df_clean.csv
 ```
 
 These CSV files were generated from the original early-stage notebook:
@@ -134,7 +141,8 @@ The overall pipeline consists of the following stages:
 6. Train a dual-branch spectral-spatial network
 7. Perform 5-fold cross-validation on the cleaned training set
 8. Ensemble fold models for final holdout evaluation
-9. Report classification metrics
+9. Save holdout probabilities and predictions
+10. Report classification metrics
 
 The main evaluation metrics include:
 
@@ -247,11 +255,18 @@ seed = 42
 The fixed split files are provided:
 
 ```text
-train_full_df_clean.csv
-test_hold_df_clean.csv
+DataCSV/train_full_df_clean.csv
+DataCSV/test_hold_df_clean.csv
 ```
 
-Therefore, the holdout test set should remain unchanged for fair comparison.
+The final holdout output files are also provided:
+
+```text
+results/holdout_probs.npy
+results/holdout_predictions.csv
+```
+
+Therefore, the holdout test set and the saved prediction outputs can be checked directly for reproducibility.
 
 For full reproduction, run the refined notebook to perform 5-fold training and holdout ensemble evaluation.
 
@@ -272,6 +287,13 @@ Overall Accuracy: 85.19%
 Average Accuracy: 85.65%
 Macro-F1: 85.72%
 Cohen's Kappa: 77.62%
+```
+
+The final holdout ensemble outputs are saved as:
+
+```text
+results/holdout_probs.npy
+results/holdout_predictions.csv
 ```
 
 ---
@@ -326,3 +348,4 @@ Utah State University
 School of Computing
 Email: a02452970@usu.edu
 ```
+````
