@@ -1,16 +1,14 @@
 # Dual-Branch Spectral-Spatial Network for UAV Hyperspectral Wheat Rust Detection
 
-This repository contains the dataset split files, cleanup logs, reproducibility information, pretrained checkpoints, and Kaggle notebooks used for the ICPR 2026 paper:
+This repository contains the dataset split files, cleanup logs, RRPR reproducibility information, pretrained checkpoints, and Kaggle notebooks used for the ICPR 2026 paper:
 
 **Dual-Branch Spectral-Spatial Network with Knowledge- and Data-Driven Band Selection for UAV Hyperspectral Wheat Rust Detection**
 
 Accepted to **ICPR 2026: 28th International Conference on Pattern Recognition**, Lyon, France.
 
----
-
 ## Overview
 
-This project focuses on UAV-based hyperspectral image classification for wheat rust detection. The goal is to build a compact and effective spectral-spatial learning pipeline that classifies hyperspectral samples into three categories:
+This project focuses on UAV-based hyperspectral image classification for wheat rust detection. The goal is to build a compact and effective spectral-spatial learning pipeline that can classify hyperspectral samples into three categories:
 
 - `Health`
 - `Rust`
@@ -18,13 +16,15 @@ This project focuses on UAV-based hyperspectral image classification for wheat r
 
 The proposed pipeline combines:
 
-1. Knowledge- and data-driven band selection
-2. A pseudo-RGB 2D spatial branch
-3. A lightweight 1D spectral branch
-4. Spatial-spectral feature fusion with SAPFB
-5. NDVI-guided dataset refinement and fixed cleaned train/test splits
+<img width="766" height="390" alt="image" src="https://github.com/user-attachments/assets/8f192709-dfcc-4d24-9b08-48579556e19f" />
 
-The repository is intended to support reproducibility of the camera-ready ICPR 2026 experiments and the ICPR 2026 RRPR evaluation.
+1. **Knowledge- and data-driven band selection**
+2. **A pseudo-RGB 2D spatial branch**
+3. **A lightweight 1D spectral branch**
+4. **Spatial-spectral feature fusion with SAPFB**
+5. **Cleaned train/test splits based on NDVI-guided data refinement**
+
+The repository is intended to support reproducibility of the camera-ready ICPR 2026 experiments.
 
 ---
 
@@ -60,10 +60,10 @@ The repository is intended to support reproducibility of the camera-ready ICPR 2
 |---|---|
 | `train_full_df_clean.csv` | Fixed NDVI-refined training dataframe used for model training and 5-fold cross-validation. |
 | `test_hold_df_clean.csv` | Fixed NDVI-refined holdout test dataframe used only for final evaluation. |
-| `cleanup_log_train_full.csv` | Log file from the NDVI-guided cleanup process for the training split. It records how the fixed training CSV was derived. |
+| `cleanup_log_train_full.csv` | Log file from the NDVI-guided cleanup process for the training split. It records how the fixed training CSV was derived from the original split. |
 | `cleanup_log_test_hold.csv` | Log file from the NDVI-guided cleanup process for the holdout test split. |
 | `notebook5c6c78846e6b4ec2fdc4 (Refined).ipynb` | Refined reproducibility notebook. This is the recommended notebook for reproducing the final ICPR 2026 pipeline. It uses the fixed NDVI-refined CSV files directly and was re-run on June 9, 2026 MDT to verify that it reproduces the reported result. |
-| `notebook5c6c78846e (2).ipynb` | Original early-stage Kaggle notebook. This notebook was used during the first experimental development stage and generated the NDVI-refined fixed train/test CSV files. It is kept for transparency but is not the recommended notebook for final reproduction. |
+| `notebook5c6c78846e (2).ipynb` | Original early-stage Kaggle notebook. This notebook was used during the first experimental development stage and generated the NDVI-refined fixed train/test CSV files. It is kept for transparency, but it is not the recommended notebook for final reproduction. |
 | `checkpoints/` | Pretrained fold checkpoints for faster verification of the holdout ensemble evaluation. |
 | `rrpr_info/required_form_info_copy_paste.txt` | Copy-paste summary for the ICPR 2026 RRPR GitHub issue form. |
 | `rrpr_info/required_form_info.json` | Structured JSON version of the RRPR form information. |
@@ -95,7 +95,7 @@ LABELS = ["Health", "Other", "Rust"]
 
 ---
 
-## Fixed Split Files
+## Fixed Train/Test Splits
 
 The final reproducibility pipeline uses the provided fixed split files:
 
@@ -104,7 +104,7 @@ train_full_df_clean.csv
 test_hold_df_clean.csv
 ```
 
-These files were generated from the original early-stage notebook:
+These CSV files were generated from the original early-stage notebook:
 
 ```text
 notebook5c6c78846e (2).ipynb
@@ -116,9 +116,9 @@ The refined reproducibility notebook:
 notebook5c6c78846e6b4ec2fdc4 (Refined).ipynb
 ```
 
-uses these CSV files directly rather than regenerating a new split. This ensures that all reproduced experiments use the same NDVI-refined train/test split reported in the paper.
+uses these CSV files directly rather than regenerating a new split. This ensures that all benchmarking and reproducibility experiments use the same NDVI-refined train/test split reported in the paper.
 
-The refined code was re-run on **June 9, 2026 MDT** and reproduced the same reported result.
+The refined notebook was re-run on June 9, 2026 MDT and reproduced the same reported result.
 
 ---
 
@@ -166,18 +166,6 @@ where:
 ```text
 666* = average of 658, 662, 666, 670, and 674 nm
 ```
-
----
-
-## Reproducible Elements
-
-The repository is intended to reproduce the following paper elements:
-
-- **Figure 3**: data-driven peak analysis used to select the three pseudo-RGB wavelengths, 674 nm, 738 nm, and 782 nm.
-- **Figure 4 / Section 3.1**: NDVI-based dataset refinement and the fixed refined train/test split with 417 training samples and 108 held-out test samples.
-- **Table 1, Proposed method columns**: proposed model results under the selected spectral-band configurations, especially the final 7-band setting.
-- **Table 3, Proposed column**: final proposed model result on the fixed held-out split, including class-wise accuracies, overall accuracy, average accuracy, Macro-F1, and Cohen's Kappa.
-- **Table 4, Proposed column**: proposed model result under the controlled 8-band setting using the fixed 8-band set `{530, 554, 570, 666*, 674, 698, 738, 782}`, where `666*` is the average of `{658, 662, 666, 670, 674}`.
 
 ---
 
