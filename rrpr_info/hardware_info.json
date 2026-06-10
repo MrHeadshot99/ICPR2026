@@ -1,0 +1,34 @@
+{
+  "export_timestamp": "2026-06-10T04:31:24.640177",
+  "platform": "Linux-6.6.122+-x86_64-with-glibc2.35",
+  "python_version": "3.11.13 (main, Jun  4 2025, 08:57:29) [GCC 11.4.0]",
+  "processor_s": "model name\t: Intel(R) Xeon(R) CPU @ 2.00GHz",
+  "ram": "total        used        free      shared  buff/cache   available\nMem:            31Gi       2.1Gi        11Gi       119Mi        17Gi        28Gi\nSwap:             0B          0B          0B",
+  "gpu": "Wed Jun 10 04:31:24 2026       \n+-----------------------------------------------------------------------------------------+\n| NVIDIA-SMI 580.105.08             Driver Version: 580.105.08     CUDA Version: 13.0     |\n+-----------------------------------------+------------------------+----------------------+\n| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |\n| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |\n|                                         |                        |               MIG M. |\n|=========================================+========================+======================|\n|   0  Tesla T4                       Off |   00000000:00:04.0 Off |                    0 |\n| N/A   77C    P0             31W /   70W |    2085MiB /  15360MiB |      0%      Default |\n|                                         |                        |                  N/A |\n+-----------------------------------------+------------------------+----------------------+\n|   1  Tesla T4                       Off |   00000000:00:05.0 Off |                    0 |\n| N/A   42C    P8              9W /   70W |       3MiB /  15360MiB |      0%      Default |\n|                                         |                        |                  N/A |\n+-----------------------------------------+------------------------+----------------------+\n\n+-----------------------------------------------------------------------------------------+\n| Processes:                                                                              |\n|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |\n|        ID   ID                                                               Usage      |\n|=========================================================================================|\n|    0   N/A  N/A              40      C   /usr/bin/python3                       2082MiB |\n+-----------------------------------------------------------------------------------------+",
+  "torch_version": "2.6.0+cu124",
+  "torch_cuda_available": true,
+  "torch_cuda_version": "12.4",
+  "torch_cudnn_version": 90300,
+  "torch_cudnn_enabled": true,
+  "torch_cudnn_benchmark": false,
+  "torch_cudnn_deterministic": true,
+  "num_cuda_devices": 2,
+  "cuda_devices_compact": [
+    {
+      "device_index": 0,
+      "name": "Tesla T4",
+      "total_memory_GiB": 14.563,
+      "major": 7,
+      "minor": 5,
+      "multi_processor_count": 40
+    },
+    {
+      "device_index": 1,
+      "name": "Tesla T4",
+      "total_memory_GiB": 14.563,
+      "major": 7,
+      "minor": 5,
+      "multi_processor_count": 40
+    }
+  ]
+}
