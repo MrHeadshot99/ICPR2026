@@ -1,14 +1,16 @@
 # Dual-Branch Spectral-Spatial Network for UAV Hyperspectral Wheat Rust Detection
 
-This repository contains the dataset files and Kaggle notebook used for the ICPR 2026 paper:
+This repository contains the dataset split files, cleanup logs, reproducibility information, pretrained checkpoints, and Kaggle notebooks used for the ICPR 2026 paper:
 
 **Dual-Branch Spectral-Spatial Network with Knowledge- and Data-Driven Band Selection for UAV Hyperspectral Wheat Rust Detection**
 
 Accepted to **ICPR 2026: 28th International Conference on Pattern Recognition**, Lyon, France.
 
+---
+
 ## Overview
 
-This project focuses on UAV-based hyperspectral image classification for wheat rust detection. The goal is to build a compact and effective spectral-spatial learning pipeline that can classify hyperspectral samples into three categories:
+This project focuses on UAV-based hyperspectral image classification for wheat rust detection. The goal is to build a compact and effective spectral-spatial learning pipeline that classifies hyperspectral samples into three categories:
 
 - `Health`
 - `Rust`
@@ -16,15 +18,13 @@ This project focuses on UAV-based hyperspectral image classification for wheat r
 
 The proposed pipeline combines:
 
-<img width="766" height="390" alt="image" src="https://github.com/user-attachments/assets/8f192709-dfcc-4d24-9b08-48579556e19f" />
+1. Knowledge- and data-driven band selection
+2. A pseudo-RGB 2D spatial branch
+3. A lightweight 1D spectral branch
+4. Spatial-spectral feature fusion with SAPFB
+5. NDVI-guided dataset refinement and fixed cleaned train/test splits
 
-1. **Knowledge- and data-driven band selection**
-2. **A pseudo-RGB 2D spatial branch**
-3. **A lightweight 1D spectral branch**
-4. **Feature fusion for final classification**
-5. **Cleaned train/test splits based on NDVI-guided data refinement**
-
-The repository is intended to support reproducibility of the camera-ready ICPR 2026 experiments.
+The repository is intended to support reproducibility of the camera-ready ICPR 2026 experiments and the ICPR 2026 RRPR evaluation.
 
 ---
 
@@ -36,41 +36,58 @@ The repository is intended to support reproducibility of the camera-ready ICPR 2
 ├── test_hold_df_clean.csv
 ├── cleanup_log_train_full.csv
 ├── cleanup_log_test_hold.csv
-├── icpr2026_wheat_rust_proposed_clean_github.ipynb
+├── notebook5c6c78846e6b4ec2fdc4 (Refined).ipynb
 ├── notebook5c6c78846e (2).ipynb
+├── checkpoints/
+│   ├── fold0_best.pth
+│   ├── fold1_best.pth
+│   ├── fold2_best.pth
+│   ├── fold3_best.pth
+│   └── fold4_best.pth
+├── rrpr_info/
+│   ├── required_form_info_copy_paste.txt
+│   ├── required_form_info.json
+│   ├── hardware_info.json
+│   └── library_versions.csv
 └── README.md
 ```
+
+---
 
 ## File Descriptions
 
 | File | Description |
 |---|---|
-| `train_full_df_clean.csv` | Cleaned training dataframe used for model training and 5-fold cross-validation. |
-| `test_hold_df_clean.csv` | Cleaned holdout test dataframe used only for final evaluation. |
-| `cleanup_log_train_full.csv` | Log file from the NDVI-guided cleanup process for the training split. |
+| `train_full_df_clean.csv` | Fixed NDVI-refined training dataframe used for model training and 5-fold cross-validation. |
+| `test_hold_df_clean.csv` | Fixed NDVI-refined holdout test dataframe used only for final evaluation. |
+| `cleanup_log_train_full.csv` | Log file from the NDVI-guided cleanup process for the training split. It records how the fixed training CSV was derived. |
 | `cleanup_log_test_hold.csv` | Log file from the NDVI-guided cleanup process for the holdout test split. |
-| `icpr2026_wheat_rust_proposed_clean_github.ipynb` | Cleaned and refined version of the ICPR 2026 experimental code. This is the recommended notebook for reproducing the final pipeline. It includes clearer comments, organized sections, and cleaned explanations for GitHub release. |
-| `notebook5c6c78846e (2).ipynb` | Original early-stage Kaggle notebook code. This version is kept for transparency and records the initial experimental development process. It may contain less organized code, temporary comments, and earlier experiment traces. |
+| `notebook5c6c78846e6b4ec2fdc4 (Refined).ipynb` | Refined reproducibility notebook. This is the recommended notebook for reproducing the final ICPR 2026 pipeline. It uses the fixed NDVI-refined CSV files directly and was re-run on June 9, 2026 MDT to verify that it reproduces the reported result. |
+| `notebook5c6c78846e (2).ipynb` | Original early-stage Kaggle notebook. This notebook was used during the first experimental development stage and generated the NDVI-refined fixed train/test CSV files. It is kept for transparency but is not the recommended notebook for final reproduction. |
+| `checkpoints/` | Pretrained fold checkpoints for faster verification of the holdout ensemble evaluation. |
+| `rrpr_info/required_form_info_copy_paste.txt` | Copy-paste summary for the ICPR 2026 RRPR GitHub issue form. |
+| `rrpr_info/required_form_info.json` | Structured JSON version of the RRPR form information. |
+| `rrpr_info/hardware_info.json` | Recorded CPU, RAM, GPU, OS, CUDA, cuDNN, and PyTorch environment information. |
+| `rrpr_info/library_versions.csv` | Key package versions used in the reproducibility environment. |
 
 ---
 
-## Dataset Format
+## Dataset
 
-The cleaned CSV files should contain at least the following columns:
+The experiments use the public ICPR 2024 UAV hyperspectral wheat dataset:
 
-```text
-path,label
-```
+**Beyond Visible Spectrum - AI for Agriculture 2024**
 
-Example:
+The hyperspectral samples are expected to be organized by class:
 
 ```text
-Health/sample_001.tif,Health
-Rust/sample_002.tif,Rust
-Other/sample_003.tif,Other
+archive/train/
+├── Health/
+├── Rust/
+└── Other/
 ```
 
-The labels are mapped as:
+Each sample is a hyperspectral `.tif` cube with 125 spectral bands. The label set is:
 
 ```python
 LABELS = ["Health", "Other", "Rust"]
@@ -78,13 +95,40 @@ LABELS = ["Health", "Other", "Rust"]
 
 ---
 
+## Fixed Split Files
+
+The final reproducibility pipeline uses the provided fixed split files:
+
+```text
+train_full_df_clean.csv
+test_hold_df_clean.csv
+```
+
+These files were generated from the original early-stage notebook:
+
+```text
+notebook5c6c78846e (2).ipynb
+```
+
+The refined reproducibility notebook:
+
+```text
+notebook5c6c78846e6b4ec2fdc4 (Refined).ipynb
+```
+
+uses these CSV files directly rather than regenerating a new split. This ensures that all reproduced experiments use the same NDVI-refined train/test split reported in the paper.
+
+The refined code was re-run on **June 9, 2026 MDT** and reproduced the same reported result.
+
+---
+
 ## Model Pipeline
 
 The overall pipeline consists of the following stages:
 
-1. Load cleaned train/test CSV files
+1. Load the fixed NDVI-refined train/test CSV files
 2. Load hyperspectral image cubes
-3. Perform knowledge- and data-driven band selection
+3. Use the final selected spectral bands reported in the paper
 4. Construct 2D pseudo-RGB inputs from selected spectral bands
 5. Construct 1D spectral inputs from compact selected bands
 6. Train a dual-branch spectral-spatial network
@@ -103,31 +147,96 @@ The main evaluation metrics include:
 
 ---
 
+## Selected Bands
+
+The final 2D pseudo-RGB branch uses:
+
+```text
+674 nm, 738 nm, 782 nm
+```
+
+The final 1D spectral branch uses:
+
+```text
+530 nm, 554 nm, 570 nm, 666* nm, 698 nm, 738 nm, 782 nm
+```
+
+where:
+
+```text
+666* = average of 658, 662, 666, 670, and 674 nm
+```
+
+---
+
+## Reproducible Elements
+
+The repository is intended to reproduce the following paper elements:
+
+- **Figure 3**: data-driven peak analysis used to select the three pseudo-RGB wavelengths, 674 nm, 738 nm, and 782 nm.
+- **Figure 4 / Section 3.1**: NDVI-based dataset refinement and the fixed refined train/test split with 417 training samples and 108 held-out test samples.
+- **Table 1, Proposed method columns**: proposed model results under the selected spectral-band configurations, especially the final 7-band setting.
+- **Table 3, Proposed column**: final proposed model result on the fixed held-out split, including class-wise accuracies, overall accuracy, average accuracy, Macro-F1, and Cohen's Kappa.
+- **Table 4, Proposed column**: proposed model result under the controlled 8-band setting using the fixed 8-band set `{530, 554, 570, 666*, 674, 698, 738, 782}`, where `666*` is the average of `{658, 662, 666, 670, 674}`.
+
+---
+
 ## Environment
 
-The experiments were developed and tested in a Kaggle notebook environment.
+The experiments were developed and tested in a Kaggle Linux environment.
+
+Recorded hardware:
+
+```text
+OS: Linux
+CPU: Intel(R) Xeon(R) CPU @ 2.00GHz
+RAM: 31 GiB system RAM
+GPU: 2 × NVIDIA Tesla T4, 15 GB each
+```
+
+Key package versions:
+
+```text
+Python: 3.11.13
+PyTorch: 2.6.0+cu124
+torchvision: 0.21.0+cu124
+timm: 1.0.19
+NumPy: 1.26.4
+pandas: 2.2.3
+scikit-learn: 1.2.2
+scikit-image: 0.25.2
+fvcore: 0.1.5.post20221221
+thop: 0.1.1
+```
+
+Additional environment details are provided in:
+
+```text
+rrpr_info/hardware_info.json
+rrpr_info/library_versions.csv
+```
 
 Install required packages if needed:
 
 ```bash
-pip install timm scikit-learn matplotlib pandas numpy opencv-python tifffile
+pip install timm scikit-learn matplotlib pandas numpy opencv-python tifffile scikit-image fvcore thop
 ```
 
 ---
 
 ## How to Run
 
-### Recommended Notebook
+### Recommended Reproducibility Notebook
 
-For reproducing the cleaned ICPR 2026 experiment pipeline, use:
+For reproducing the final ICPR 2026 experiment pipeline, use:
 
 ```text
-icpr2026_wheat_rust_proposed_clean_github.ipynb
+notebook5c6c78846e6b4ec2fdc4 (Refined).ipynb
 ```
 
-This notebook is the cleaned and organized version of the experimental code.
+This is the recommended notebook for RRPR evaluation. It uses the fixed NDVI-refined CSV files and reproduces the final reported pipeline.
 
-### Original Kaggle Notebook
+### Original Early-Stage Notebook
 
 The following notebook is also included for transparency:
 
@@ -135,19 +244,19 @@ The following notebook is also included for transparency:
 notebook5c6c78846e (2).ipynb
 ```
 
-This is the original early-stage Kaggle notebook and may contain less organized code, temporary comments, or experimental traces. It is not the recommended version for reproducing the final cleaned pipeline.
+This notebook was used during the first experimental development stage and generated the NDVI-refined fixed train/test CSV files. It may contain less organized code, temporary comments, and earlier experiment traces. It is not the recommended version for final reproduction.
 
 ---
 
 ## Reproducibility Notes
 
-The experiments use a fixed random seed where possible.
+The experiments use a fixed random seed where possible:
 
 ```python
 seed = 42
 ```
 
-The split files are already provided:
+The fixed split files are provided:
 
 ```text
 train_full_df_clean.csv
@@ -155,6 +264,48 @@ test_hold_df_clean.csv
 ```
 
 Therefore, the holdout test set should remain unchanged for fair comparison.
+
+For full reproduction, run the refined notebook to perform 5-fold training and holdout ensemble evaluation.
+
+For faster verification, pretrained fold checkpoints are provided under:
+
+```text
+checkpoints/
+```
+
+---
+
+## Expected Reproduced Result
+
+The final proposed model is expected to reproduce the reported holdout performance:
+
+```text
+Overall Accuracy: 85.19%
+Average Accuracy: 85.65%
+Macro-F1: 85.72%
+Cohen's Kappa: 77.62%
+```
+
+---
+
+## RRPR Information
+
+The folder:
+
+```text
+rrpr_info/
+```
+
+contains supporting information for the ICPR 2026 Reproducible Research in Pattern Recognition Badge submission:
+
+```text
+required_form_info_copy_paste.txt
+required_form_info.json
+hardware_info.json
+library_versions.csv
+```
+
+These files summarize the required form fields, hardware/software configuration, and key package versions.
 
 ---
 
@@ -187,4 +338,3 @@ Utah State University
 School of Computing
 Email: a02452970@usu.edu
 ```
-
